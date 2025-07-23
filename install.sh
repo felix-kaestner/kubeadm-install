@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# SPDX-FileCopyrightText: 2025 Felix Kästner
+# SPDX-License-Identifier: Apache-2.0
+
 # install.sh: Prepares a Ubuntu LTS node for running Kubernetes.
 #
 # This script installs and configures all necessary dependencies for a
