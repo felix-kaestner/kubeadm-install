@@ -118,6 +118,7 @@ install_containerd() {
     curl -sSL "${url}.sha256sum" | sha256sum -c
     tar -C /usr/local -xzf "containerd-${CONTAINERD_VERSION}-linux-${ARCH}.tar.gz"
     success "containerd installed."
+    rm -f "containerd-${CONTAINERD_VERSION}-linux-${ARCH}.tar.gz"
 }
 
 install_runc() {
@@ -127,6 +128,7 @@ install_runc() {
     curl -sSL "${url}.sha256sum" | grep "runc.${ARCH}" | sha256sum -c
     install -m 755 "runc.${ARCH}" /usr/local/sbin/runc
     success "runc installed."
+    rm -f "runc.${ARCH}"
 }
 
 install_cni_plugins() {
@@ -137,6 +139,7 @@ install_cni_plugins() {
     mkdir -p /opt/cni/bin
     tar -C /opt/cni/bin -xzf "cni-plugins-linux-${ARCH}-v${CNI_PLUGINS_VERSION}.tgz"
     success "CNI plugins installed."
+    rm -f "cni-plugins-linux-${ARCH}-v${CNI_PLUGINS_VERSION}.tgz"
 }
 
 setup_containerd_service() {
@@ -264,6 +267,7 @@ EOF
 
     mkdir -p "${HOME:-/root}/.kube"
     cp -f $KUBECONFIG "${HOME:-/root}/.kube/config"
+    rm -f kubeadm-config.yaml
 
     echo
     echo "----------------------------------------------------------------"
