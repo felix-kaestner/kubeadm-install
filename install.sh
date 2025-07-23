@@ -114,23 +114,28 @@ parse_args() {
 install_containerd() {
     info "Step 1: Downloading and installing containerd v${CONTAINERD_VERSION}..."
     local url="https://github.com/containerd/containerd/releases/download/v${CONTAINERD_VERSION}/containerd-${CONTAINERD_VERSION}-linux-${ARCH}.tar.gz"
-    curl -sSL "${url}" | tar -C /usr/local -xz
+    curl -sSLO "${url}"
+    curl -sSL "${url}.sha256sum" | sha256sum -c
+    tar -C /usr/local -xzf "containerd-${CONTAINERD_VERSION}-linux-${ARCH}.tar.gz"
     success "containerd installed."
 }
 
 install_runc() {
     info "Step 2: Downloading and installing runc v${RUNC_VERSION}..."
-    local url="https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc.${ARCH}"
-    curl -sSL "${url}" -o /usr/local/sbin/runc
-    chmod 755 /usr/local/sbin/runc
+    local url="https://github.com/opencontainers/runc/releases/download/v${RUNC_VERSION}/runc"
+    curl -sSLO "${url}.${ARCH}"
+    curl -sSL "${url}.sha256sum" | grep "runc.${ARCH}" | sha256sum -c
+    install -m 755 "runc.${ARCH}" /usr/local/sbin/runc
     success "runc installed."
 }
 
 install_cni_plugins() {
     info "Step 3: Downloading and installing CNI plugins v${CNI_PLUGINS_VERSION}..."
     local url="https://github.com/containernetworking/plugins/releases/download/v${CNI_PLUGINS_VERSION}/cni-plugins-linux-${ARCH}-v${CNI_PLUGINS_VERSION}.tgz"
+    curl -sSLO "${url}"
+    curl -sSL "${url}.sha256" | sha256sum -c
     mkdir -p /opt/cni/bin
-    curl -sSL "${url}" | tar -C /opt/cni/bin -xz
+    tar -C /opt/cni/bin -xzf "cni-plugins-linux-${ARCH}-v${CNI_PLUGINS_VERSION}.tgz"
     success "CNI plugins installed."
 }
 
